@@ -11,11 +11,13 @@ class CustomizationProject extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'product_id',
         'product_template_id',
         'customer_name',
         'customer_email',
         'status',
+        'prompt',
         'customization_data',
         'latest_render',
     ];
@@ -24,6 +26,11 @@ class CustomizationProject extends Model
         'customization_data' => 'array',
         'latest_render' => 'array',
     ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function product(): BelongsTo
     {

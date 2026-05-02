@@ -8,6 +8,11 @@ use Illuminate\Http\JsonResponse;
 
 class TemplateController extends Controller
 {
+    public function __construct(
+        protected \App\Services\Ai\GeminiCustomizer $geminiCustomizer,
+    ) {
+    }
+
     public function index(): JsonResponse
     {
         $templates = ProductTemplate::query()
@@ -35,5 +40,36 @@ class TemplateController extends Controller
                 ],
             ],
         ]);
+    }
+
+    public function generateFromAi(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'description' => ['required', 'string', 'max:1000'],
+            'product_id' => ['required', 'integer', \Illuminate\Validation\Rule::exists('products', 'id')],
+        ]);
+
+        try {
+            $templateData = $this->geminiCustomizer->generateTemplate($validated['description']);
+
+            $template = ProductTemplate::query()->create([
+                'product_id' => $validated['product_id'],
+                'name' => $templateData['name'] ?? 'Nouveau Modèle IA',
+                'slug' => \Illuminate\Support\Str::slug($templateData['name'] ?? 'ai-template-' . time()),
+                'description' => $templateData['description'] ?? $validated['description'],
+                'layout' => $templateData['layout'] ?? [],
+                'default_values' => $templateData['default_values'] ?? [],
+                'editable_areas' => $templateData['editable_areas'] ?? [],
+                'is_active' => true,
+            ]);
+
+            return response()->json([
+                'data' => $template,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Template generation failed: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 }

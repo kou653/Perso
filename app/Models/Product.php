@@ -16,11 +16,13 @@ class Product extends Model
         'description',
         'category',
         'base_image_url',
+        'price',
         'is_active',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
+        'price' => 'decimal:2',
     ];
 
     public function templates(): HasMany
