@@ -40,6 +40,7 @@ class ProjectController extends Controller
             'customer_name' => ['nullable', 'string', 'max:255'],
             'customer_email' => ['nullable', 'email', 'max:255'],
             'customization_data' => ['nullable', 'array'],
+            'ai_refinement_prompt' => ['nullable', 'string', 'max:1000'],
         ]);
 
         $product = Product::query()->findOrFail($validated['product_id']);
@@ -60,16 +61,45 @@ class ProjectController extends Controller
         // Validate against template rules
         $this->customizationValidator->validate($template, $customizationData);
 
+        // Apply AI refinement if prompt provided
+        $aiSuggestions = null;
+        $projectStatus = 'configured';
+        
+        if (!empty($validated['ai_refinement_prompt'])) {
+            try {
+                $aiSuggestions = $this->geminiCustomizer->customize(
+                    $template,
+                    $validated['ai_refinement_prompt'],
+                    $customizationData
+                );
+                
+                // Merge AI suggestions with user data
+                $customizationData = array_merge($customizationData, $aiSuggestions);
+                
+                // Validate AI suggestions
+                $this->customizationValidator->validate($template, $customizationData);
+                
+                $projectStatus = 'ai_refined';
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('AI Refinement Error: ' . $e->getMessage());
+                // Continue without AI refinement if it fails
+            }
+        }
+
         $render = $this->templateRenderer->render(
             $template,
             $customizationData,
         );
 
         $project = CustomizationProject::query()->create([
-            ...$validated,
+            'product_id' => $validated['product_id'],
+            'product_template_id' => $validated['product_template_id'],
+            'customer_name' => $validated['customer_name'] ?? null,
+            'customer_email' => $validated['customer_email'] ?? null,
             'user_id' => $request->user()->id,
             'customization_data' => $customizationData,
-            'status' => 'configured',
+            'prompt' => $validated['ai_refinement_prompt'] ?? null,
+            'status' => $projectStatus,
             'latest_render' => $render,
         ]);
 
@@ -77,6 +107,7 @@ class ProjectController extends Controller
 
         return response()->json([
             'data' => $project,
+            'ai_suggestions' => $aiSuggestions,
         ], 201);
     }
 
@@ -99,6 +130,7 @@ class ProjectController extends Controller
             'customer_name' => ['sometimes', 'nullable', 'string', 'max:255'],
             'customer_email' => ['sometimes', 'nullable', 'email', 'max:255'],
             'customization_data' => ['sometimes', 'array'],
+            'ai_refinement_prompt' => ['nullable', 'string', 'max:1000'],
         ]);
 
         $project->load('template');
@@ -114,19 +146,57 @@ class ProjectController extends Controller
         // Validate against template rules
         $this->customizationValidator->validate($project->template, $customizationData);
 
+        // Apply AI refinement if prompt provided
+        $aiSuggestions = null;
+        $projectStatus = $project->status; // Keep existing status if no AI refinement
+        
+        if (!empty($validated['ai_refinement_prompt'])) {
+            try {
+                $aiSuggestions = $this->geminiCustomizer->customize(
+                    $project->template,
+                    $validated['ai_refinement_prompt'],
+                    $customizationData
+                );
+                
+                // Merge AI suggestions with user data
+                $customizationData = array_merge($customizationData, $aiSuggestions);
+                
+                // Validate AI suggestions
+                $this->customizationValidator->validate($project->template, $customizationData);
+                
+                $projectStatus = 'ai_refined';
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('AI Refinement Error: ' . $e->getMessage());
+                // Continue without AI refinement if it fails
+            }
+        }
+
         $render = $this->templateRenderer->render($project->template, $customizationData);
 
-        $project->update([
-            ...$validated,
+        $updateData = [
             'customization_data' => $customizationData,
-            'status' => 'configured',
+            'status' => $projectStatus,
             'latest_render' => $render,
-        ]);
+        ];
+        
+        // Only update customer info if provided
+        if (isset($validated['customer_name'])) {
+            $updateData['customer_name'] = $validated['customer_name'];
+        }
+        if (isset($validated['customer_email'])) {
+            $updateData['customer_email'] = $validated['customer_email'];
+        }
+        if (!empty($validated['ai_refinement_prompt'])) {
+            $updateData['prompt'] = $validated['ai_refinement_prompt'];
+        }
+
+        $project->update($updateData);
 
         $project->load(['product', 'template']);
 
         return response()->json([
             'data' => $project,
+            'ai_suggestions' => $aiSuggestions,
         ]);
     }
 
