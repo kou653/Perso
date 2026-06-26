@@ -23,10 +23,14 @@ Route::prefix('templates')->group(function (): void {
     Route::get('/{template}', [TemplateController::class, 'show']);
 });
 
+// Public projects endpoint (for anonymous customization creation)
+Route::prefix('projects')->group(function (): void {
+    Route::post('/', [ProjectController::class, 'store']);
+});
+
 Route::middleware('auth:sanctum')->group(function (): void {
     Route::prefix('projects')->group(function (): void {
         Route::get('/', [ProjectController::class, 'index']);
-        Route::post('/', [ProjectController::class, 'store']);
         Route::get('/{project}', [ProjectController::class, 'show']);
         Route::put('/{project}', [ProjectController::class, 'update']);
         Route::post('/{project}/generate-from-template', [ProjectController::class, 'generateFromTemplate']);

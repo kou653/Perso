@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\ProductTemplate;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class TemplateController extends Controller
 {
@@ -52,6 +53,13 @@ class TemplateController extends Controller
         try {
             $templateData = $this->geminiCustomizer->generateTemplate($validated['description']);
 
+            // Ensure template data is valid
+            if (empty($templateData) || !isset($templateData['name'])) {
+                return response()->json([
+                    'message' => 'AI failed to generate a valid template. Please try again.',
+                ], 400);
+            }
+
             $template = ProductTemplate::query()->create([
                 'product_id' => $validated['product_id'],
                 'name' => $templateData['name'] ?? 'Nouveau Modèle IA',
@@ -67,6 +75,7 @@ class TemplateController extends Controller
                 'data' => $template,
             ], 201);
         } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Template Generation Error: ' . $e->getMessage());
             return response()->json([
                 'message' => 'Template generation failed: ' . $e->getMessage(),
             ], 500);

@@ -96,7 +96,7 @@ class ProjectController extends Controller
             'product_template_id' => $validated['product_template_id'],
             'customer_name' => $validated['customer_name'] ?? null,
             'customer_email' => $validated['customer_email'] ?? null,
-            'user_id' => $request->user()->id,
+            'user_id' => $request->user()->id ?? null,  // Allow anonymous creation
             'customization_data' => $customizationData,
             'prompt' => $validated['ai_refinement_prompt'] ?? null,
             'status' => $projectStatus,

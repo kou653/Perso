@@ -47,15 +47,40 @@ PROMPT;
      */
     public function generateTemplate(string $description): array
     {
-        $systemPrompt = <<<PROMPT
-You are a product template designer. Generate a JSON structure for a new product template.
-REQUIRED FIELDS:
-- name: string
-- description: string
-- layout: object (visual layout description)
-- default_values: object (key => value)
-- editable_areas: array of objects {key, label, type}
-Return ONLY valid JSON.
+        $systemPrompt = <<<'PROMPT'
+You are a product template designer for a customization platform.
+Generate a JSON structure for a new product template based on user description.
+
+RESPONSE FORMAT (return ONLY valid JSON):
+{
+  "name": "Template Name (concise, 2-4 words)",
+  "description": "Brief description of what this template offers",
+  "layout": {
+    "primaryColor": "oklch(0.55 0.2 250)",
+    "style": "modern|minimal|elegant|playful"
+  },
+  "default_values": {
+    "key1": "default text",
+    "key2": "https://via.placeholder.com/300",
+    "key3": "#000000"
+  },
+  "editable_areas": [
+    {
+      "key": "field_name",
+      "type": "text|image|color",
+      "label": "Human readable label",
+      "default_value": "optional default"
+    }
+  ]
+}
+
+REQUIREMENTS:
+- Generate 2-4 editable areas based on description
+- Types can be: "text" (for strings), "image" (for URLs), "color" (for hex colors)
+- Provide sensible defaults for each field
+- Make labels clear and concise (5-10 chars)
+- Name should be catchy but professional
+
 PROMPT;
 
         return $this->callGemini($systemPrompt . "\n\nDESCRIPTION: " . $description);
@@ -86,14 +111,36 @@ PROMPT;
             ]);
 
             if ($response->failed()) {
-                Log::error('Gemini API Error: ' . $response->body());
-                throw new \Exception('Gemini API Error: ' . $response->status());
+                $errorBody = $response->body();
+                Log::error('Gemini API Error: ' . $errorBody);
+                throw new \Exception('Gemini API Error: ' . $response->status() . ' - ' . $errorBody);
             }
 
             $result = $response->json();
-            $jsonText = $result['candidates'][0]['content']['parts'][0]['text'] ?? '{}';
+            Log::debug('Gemini Response: ' . json_encode($result));
             
-            return json_decode($jsonText, true) ?? [];
+            // Check if response has the expected structure
+            if (!isset($result['candidates']) || !isset($result['candidates'][0])) {
+                Log::error('Gemini Response missing candidates: ' . json_encode($result));
+                throw new \Exception('Gemini API returned unexpected structure');
+            }
+
+            $jsonText = $result['candidates'][0]['content']['parts'][0]['text'] ?? null;
+            
+            if (!$jsonText) {
+                Log::error('Gemini Response missing text content: ' . json_encode($result));
+                throw new \Exception('Gemini API returned empty text');
+            }
+
+            Log::debug('Gemini JSON Text: ' . $jsonText);
+            
+            $decoded = json_decode($jsonText, true);
+            if ($decoded === null) {
+                Log::error('Failed to decode JSON from Gemini: ' . $jsonText);
+                throw new \Exception('Failed to decode JSON from Gemini API');
+            }
+            
+            return $decoded;
         } catch (\Exception $e) {
             Log::error('Gemini Customizer Exception: ' . $e->getMessage());
             throw $e;
