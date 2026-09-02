@@ -12,211 +12,168 @@ class ProductSeeder extends Seeder
     {
         $products = [
             [
-                'name' => 'Mug Premium',
-                'slug' => 'mug-premium',
-                'description' => 'Mug personnalisable pour photo, texte ou logo.',
+                'name' => 'Mug Céramique Personnalisé',
+                'slug' => 'mug',
+                'description' => 'Mug en céramique de haute qualité (330ml), résistant au micro-ondes et lave-vaisselle.',
                 'category' => 'mug',
-                'base_image_url' => '/images/products/mug-premium.png',
+                'base_image_url' => '/model/mug-maman-damour.jpg',
                 'templates' => [
                     [
-                        'name' => 'Mug Photo Classique',
-                        'slug' => 'mug-photo-classique',
-                        'description' => 'Template mug avec photo centrale et texte court.',
+                        'name' => 'Cadeau Belle-Mère & Famille',
+                        'slug' => 'mug-belle-mere',
+                        'description' => 'Tasse avec poignée en cœur, collage de 2 photos polaroid et message d\'affection.',
                         'preview_data' => [
-                            'background' => '#ffffff',
-                            'style' => 'clean',
-                            'mockup' => '/images/products/mug-premium.png',
+                            'imageUrl' => '/model/mug-belle-mere.jpg',
+                            'category' => 'Cadeau & Famille',
                         ],
-                        'layout' => [
-                            'canvas' => ['width' => 2000, 'height' => 1200],
-                            'zones' => [
-                                'title' => ['x' => 180, 'y' => 820, 'width' => 700, 'height' => 160],
-                                'image' => ['x' => 960, 'y' => 220, 'width' => 640, 'height' => 640],
-                                'accent_color' => ['target' => 'background'],
-                            ],
-                        ],
+                        'layout' => [],
                         'default_values' => [
-                            'title' => 'Votre message ici',
-                            'image' => null,
-                            'accent_color' => '#d97706',
+                            'header_text' => 'Dear mother-in-law',
+                            'photo_1' => '/model/mug-belle-mere.jpg',
+                            'photo_2' => '/model/mug-belle-mere.jpg',
+                            'footer_message' => 'Thank you my mother-in-law for treating me like a daughter.',
                         ],
                         'editable_areas' => [
-                            ['key' => 'title', 'type' => 'text', 'label' => 'Texte principal', 'required' => true, 'max_length' => 40],
-                            ['key' => 'image', 'type' => 'image', 'label' => 'Photo avant', 'required' => false],
-                            ['key' => 'accent_color', 'type' => 'color', 'label' => 'Couleur dominante', 'required' => true],
+                            ['key' => 'header_text', 'type' => 'text', 'label' => 'Titre d\'en-tête', 'required' => false],
+                            ['key' => 'photo_1', 'type' => 'image', 'label' => 'Photo Polaroid 1 (gauche)', 'required' => false],
+                            ['key' => 'photo_2', 'type' => 'image', 'label' => 'Photo Polaroid 2 (droite)', 'required' => false],
+                            ['key' => 'footer_message', 'type' => 'text', 'label' => 'Message de remerciement', 'required' => false],
                         ],
                     ],
-                ],
-            ],
-            [
-                'name' => 'T-Shirt Street',
-                'slug' => 't-shirt-street',
-                'description' => 'T-shirt personnalisable avec visuel et slogan.',
-                'category' => 't_shirt',
-                'base_image_url' => '/images/products/tshirt-street.png',
-                'templates' => [
                     [
-                        'name' => 'T-Shirt Minimal Logo',
-                        'slug' => 'tshirt-minimal-logo',
-                        'description' => 'Template t-shirt avec logo poitrine et texte dos.',
+                        'name' => 'Calendrier Date Spéciale & Photo',
+                        'slug' => 'mug-calendrier-couple',
+                        'description' => 'Double face : calendrier avec cœur sur la date clé et photo de couple avec mot doux.',
                         'preview_data' => [
-                            'background' => '#111111',
-                            'style' => 'minimal',
-                            'mockup' => '/images/products/tshirt-street.png',
+                            'imageUrl' => '/model/mug-calendrier-couple.jpg',
+                            'category' => 'Amour & Couple',
                         ],
-                        'layout' => [
-                            'canvas' => ['width' => 1600, 'height' => 1800],
-                            'zones' => [
-                                'front_logo' => ['x' => 610, 'y' => 360, 'width' => 380, 'height' => 380],
-                                'back_text' => ['x' => 300, 'y' => 1120, 'width' => 1000, 'height' => 180],
-                                'shirt_color' => ['target' => 'garment'],
-                            ],
-                        ],
+                        'layout' => [],
                         'default_values' => [
-                            'front_logo' => null,
-                            'back_text' => 'Create your move',
-                            'shirt_color' => '#111111',
+                            'date_title' => '06 de Agosto de 2022',
+                            'day_number' => '6',
+                            'bottom_left_text' => 'quando tudo começou...',
+                            'photo_couple' => '/model/mug-calendrier-couple.jpg',
+                            'couple_message' => 'Te amo !!',
                         ],
                         'editable_areas' => [
-                            ['key' => 'front_logo', 'type' => 'image', 'label' => 'Logo poitrine'],
-                            ['key' => 'back_text', 'type' => 'text', 'label' => 'Texte au dos', 'max_length' => 60],
-                            ['key' => 'shirt_color', 'type' => 'color', 'label' => 'Couleur du t-shirt'],
+                            ['key' => 'date_title', 'type' => 'text', 'label' => 'Mois et Année du calendrier', 'required' => false],
+                            ['key' => 'day_number', 'type' => 'text', 'label' => 'Numéro du jour entouré d\'un cœur', 'required' => false],
+                            ['key' => 'bottom_left_text', 'type' => 'text', 'label' => 'Citation sous calendrier', 'required' => false],
+                            ['key' => 'photo_couple', 'type' => 'image', 'label' => 'Photo de couple', 'required' => false],
+                            ['key' => 'couple_message', 'type' => 'text', 'label' => 'Message d\'amour', 'required' => false],
                         ],
                     ],
-                ],
-            ],
-            [
-                'name' => 'Sac Tote Urban',
-                'slug' => 'sac-tote-urban',
-                'description' => 'Sac personnalisable avec design textile et citation.',
-                'category' => 'sac',
-                'base_image_url' => '/images/products/sac-tote-urban.png',
-                'templates' => [
                     [
-                        'name' => 'Sac Citation Chic',
-                        'slug' => 'sac-citation-chic',
-                        'description' => 'Template sac avec texte central et motif simple.',
+                        'name' => 'Best Mom Ever & Poème',
+                        'slug' => 'mug-magique-maman',
+                        'description' => 'Face avant avec photo et mention \'Best Mom Ever\', face arrière avec un poème émouvant.',
                         'preview_data' => [
-                            'background' => '#eadcc8',
-                            'style' => 'editorial',
-                            'mockup' => '/images/products/sac-tote-urban.png',
+                            'imageUrl' => '/model/mug-magique-maman.png',
+                            'category' => 'Famille & Maman',
                         ],
-                        'layout' => [
-                            'canvas' => ['width' => 1600, 'height' => 1800],
-                            'zones' => [
-                                'quote' => ['x' => 260, 'y' => 680, 'width' => 1080, 'height' => 240],
-                                'accent_color' => ['target' => 'ink'],
-                            ],
-                        ],
+                        'layout' => [],
                         'default_values' => [
-                            'quote' => 'Le style commence ici',
-                            'accent_color' => '#7c3aed',
+                            'front_title' => 'Best Mom Ever',
+                            'mom_photo' => '/model/mug-magique-maman.png',
+                            'front_subtitle' => 'WE LOVE YOU SO MUCH',
+                            'back_poem' => 'Tu es notre repère, notre force et notre plus belle histoire ❤️',
                         ],
                         'editable_areas' => [
-                            ['key' => 'quote', 'type' => 'text', 'label' => 'Citation', 'max_length' => 80],
-                            ['key' => 'accent_color', 'type' => 'color', 'label' => 'Couleur accent'],
+                            ['key' => 'front_title', 'type' => 'text', 'label' => 'Titre face avant', 'required' => false],
+                            ['key' => 'mom_photo', 'type' => 'image', 'label' => 'Photo maman & enfant(s)', 'required' => false],
+                            ['key' => 'front_subtitle', 'type' => 'text', 'label' => 'Sous-titre face avant', 'required' => false],
+                            ['key' => 'back_poem', 'type' => 'text', 'label' => 'Poème / Message face arrière', 'required' => false],
                         ],
                     ],
-                ],
-            ],
-            [
-                'name' => 'Porte-Cle Metal',
-                'slug' => 'porte-cle-metal',
-                'description' => 'Porte-cle personnalise avec nom, date ou symbole.',
-                'category' => 'porte_cle',
-                'base_image_url' => '/images/products/porte-cle-metal.png',
-                'templates' => [
                     [
-                        'name' => 'Porte-Cle Initiales',
-                        'slug' => 'porte-cle-initiales',
-                        'description' => 'Template porte-cle gravure simple.',
+                        'name' => 'Monogramme Doré Élégant',
+                        'slug' => 'mug-monogramme-or',
+                        'description' => 'Grande initiale dorée majuscule ornée d\'un prénom calligraphié en noir.',
                         'preview_data' => [
-                            'background' => '#b6bcc8',
-                            'style' => 'engraved',
-                            'mockup' => '/images/products/porte-cle-metal.png',
+                            'imageUrl' => '/model/mug-monogramme-or.jpg',
+                            'category' => 'Monogramme & Élégant',
                         ],
-                        'layout' => [
-                            'canvas' => ['width' => 900, 'height' => 900],
-                            'zones' => [
-                                'initials' => ['x' => 220, 'y' => 350, 'width' => 460, 'height' => 160],
-                            ],
-                        ],
+                        'layout' => [],
                         'default_values' => [
-                            'initials' => 'AB',
+                            'initial' => 'M',
+                            'name' => 'Mackenzie',
                         ],
                         'editable_areas' => [
-                            ['key' => 'initials', 'type' => 'text', 'label' => 'Initiales', 'max_length' => 6],
+                            ['key' => 'initial', 'type' => 'text', 'label' => 'Initiale Monogramme (Doré)', 'required' => false],
+                            ['key' => 'name', 'type' => 'text', 'label' => 'Prénom calligraphié', 'required' => false],
                         ],
                     ],
-                ],
-            ],
-            [
-                'name' => 'Stylo Signature',
-                'slug' => 'stylo-signature',
-                'description' => 'Stylo personnalisable pour cadeaux et branding.',
-                'category' => 'stylo',
-                'base_image_url' => '/images/products/stylo-signature.png',
-                'templates' => [
                     [
-                        'name' => 'Stylo Corporate',
-                        'slug' => 'stylo-corporate',
-                        'description' => 'Template stylo avec nom ou marque.',
+                        'name' => 'Maman d\'Amour & Prénoms',
+                        'slug' => 'mug-maman-damour',
+                        'description' => 'Mug avec intérieur rouge. Face 1 : \'Maman D\'AMOUR\', Face 2 : Prénoms des enfants.',
                         'preview_data' => [
-                            'background' => '#0f172a',
-                            'style' => 'corporate',
-                            'mockup' => '/images/products/stylo-signature.png',
+                            'imageUrl' => '/model/mug-maman-damour.jpg',
+                            'category' => 'Famille & Maman',
                         ],
-                        'layout' => [
-                            'canvas' => ['width' => 1800, 'height' => 500],
-                            'zones' => [
-                                'brand_name' => ['x' => 420, 'y' => 180, 'width' => 920, 'height' => 120],
-                                'body_color' => ['target' => 'body'],
-                            ],
-                        ],
+                        'layout' => [],
                         'default_values' => [
-                            'brand_name' => 'Votre marque',
-                            'body_color' => '#0f172a',
+                            'title' => 'Maman D\'AMOUR',
+                            'children_names' => "Alma, Lucie, Noah",
                         ],
                         'editable_areas' => [
-                            ['key' => 'brand_name', 'type' => 'text', 'label' => 'Nom de marque', 'max_length' => 30],
-                            ['key' => 'body_color', 'type' => 'color', 'label' => 'Couleur du stylo'],
+                            ['key' => 'title', 'type' => 'text', 'label' => 'Titre face 1', 'required' => false],
+                            ['key' => 'children_names', 'type' => 'text', 'label' => 'Prénoms des enfants (face 2)', 'required' => false],
                         ],
                     ],
-                ],
-            ],
-            [
-                'name' => 'Casquette Sport',
-                'slug' => 'casquette-sport',
-                'description' => 'Casquette personnalisable avec patch, logo et texte.',
-                'category' => 'casquette',
-                'base_image_url' => '/images/products/casquette-sport.png',
-                'templates' => [
                     [
-                        'name' => 'Casquette Club',
-                        'slug' => 'casquette-club',
-                        'description' => 'Template casquette avec logo frontal.',
+                        'name' => 'Tu es l\'amour de ma vie',
+                        'slug' => 'mug-ourson-amour',
+                        'description' => 'Mug intérieur rouge avec la déclaration d\'amour et le prénom personnalisé.',
                         'preview_data' => [
-                            'background' => '#dc2626',
-                            'style' => 'sport',
-                            'mockup' => '/images/products/casquette-sport.png',
+                            'imageUrl' => '/model/mug-ourson-amour.jpg',
+                            'category' => 'Amour & Saint-Valentin',
                         ],
-                        'layout' => [
-                            'canvas' => ['width' => 1600, 'height' => 1200],
-                            'zones' => [
-                                'front_patch' => ['x' => 520, 'y' => 360, 'width' => 540, 'height' => 320],
-                                'side_text' => ['x' => 1100, 'y' => 700, 'width' => 260, 'height' => 120],
-                                'cap_color' => ['target' => 'fabric'],
-                            ],
-                        ],
+                        'layout' => [],
                         'default_values' => [
-                            'front_patch' => null,
-                            'side_text' => 'CLUB',
-                            'cap_color' => '#dc2626',
+                            'quote' => 'Tu es L\'AMOUR de ma vie',
+                            'name' => 'Caroline',
                         ],
                         'editable_areas' => [
-                            ['key' => 'front_patch', 'type' => 'image', 'label' => 'Patch frontal'],
-                            ['key' => 'side_text', 'type' => 'text', 'label' => 'Texte lateral', 'max_length' => 20],
-                            ['key' => 'cap_color', 'type' => 'color', 'label' => 'Couleur de la casquette'],
+                            ['key' => 'quote', 'type' => 'text', 'label' => 'Message / Déclaration', 'required' => false],
+                            ['key' => 'name', 'type' => 'text', 'label' => 'Prénom personnalisé', 'required' => false],
+                        ],
+                    ],
+                    [
+                        'name' => 'Photo Souvenir, Noms & Date',
+                        'slug' => 'mug-photo-souvenir',
+                        'description' => 'Photo carrée haute définition, prénoms de couple élégants et date commémorative.',
+                        'preview_data' => [
+                            'imageUrl' => '/model/mug-photo-souvenir.jpg',
+                            'category' => 'Photo & Souvenir',
+                        ],
+                        'layout' => [],
+                        'default_values' => [
+                            'photo' => '/model/mug-photo-souvenir.jpg',
+                            'couple_names' => 'Lucas & Isabella',
+                            'special_date' => '22.06.2024',
+                        ],
+                        'editable_areas' => [
+                            ['key' => 'photo', 'type' => 'image', 'label' => 'Photo principale', 'required' => false],
+                            ['key' => 'couple_names', 'type' => 'text', 'label' => 'Noms / Prénoms', 'required' => false],
+                            ['key' => 'special_date', 'type' => 'text', 'label' => 'Date mémorable', 'required' => false],
+                        ],
+                    ],
+                    [
+                        'name' => 'Prénom Minimaliste & Cœur',
+                        'slug' => 'mug-minimaliste-prenom',
+                        'description' => 'Design épuré et raffiné avec un cœur délicat et votre prénom manuscrit.',
+                        'preview_data' => [
+                            'imageUrl' => '/model/mug-minimaliste-prenom.jpg',
+                            'category' => 'Minimaliste & Prénom',
+                        ],
+                        'layout' => [],
+                        'default_values' => [
+                            'name' => 'Emma',
+                        ],
+                        'editable_areas' => [
+                            ['key' => 'name', 'type' => 'text', 'label' => 'Prénom personnalisé', 'required' => false],
                         ],
                     ],
                 ],
@@ -235,9 +192,10 @@ class ProductSeeder extends Seeder
             foreach ($templates as $templateData) {
                 ProductTemplate::query()->updateOrCreate(
                     ['slug' => $templateData['slug']],
-                    [...$templateData, 'product_id' => $product->id],
+                    [...$templateData, 'product_id' => $product->id, 'is_active' => true],
                 );
             }
         }
     }
 }
+
